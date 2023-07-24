@@ -6,7 +6,7 @@
       body {
         background: url("{{ url_for('static', filename='images/bg.jpeg') }}")
           no-repeat center center fixed;
-background-size: cover; 
+        background-size: cover;
         -webkit-background-size: cover;
         -moz-background-size: cover;
         -o-background-size: cover;
@@ -18,7 +18,7 @@ background-size: cover;
         margin: 100px;
         padding: 10px;
         text-align: center;
-        color: white;
+        color: black;
       }
       #overlay-home {
         display: flex;
@@ -26,7 +26,7 @@ background-size: cover;
         align-items: center;
         justify-content: center;
         /* background-color: rgba(0, 0, 0, 0.8); */
-        color: white;
+        color: black;
         height: calc(10vh - 20px);
         padding: 10px;
       }
@@ -63,7 +63,7 @@ background-size: cover;
               src="{{ url_for('static', filename='images/admin.png') }}"
               alt="Admin Icon"
             />
-            <h3 style="color: white">Admin</h3>
+            <h3 style="color: black">Admin</h3>
           </div>
         </a>
 
@@ -73,7 +73,7 @@ background-size: cover;
               src="{{ url_for('static', filename='images/staff.png') }}"
               alt="Staff Icon"
             />
-            <h3 style="color: white;">Staff</h3>
+            <h3 style="color: black">Staff</h3>
           </div>
         </a>
       </div>
