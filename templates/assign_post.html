@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Assign Post</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+      crossorigin="anonymous"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      form {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      label {
+        display: block;
+        margin-top: 10px;
+      }
+      input[type="text"],
+      input[type="date"] {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-top: 5px;
+      }
+      input[type="submit"] {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+      input[type="submit"]:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="/mark_attendance">Guard Attendance</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/main_page"
+              >Add Recruit <span class="sr-only">(current)</span></a
+            >
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/assign_post">Assign Post</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/mark_attendance">Attendance</a>
+          </li>
+          <li class="nav-item">
+            <a onclick="return(confirm('Are you sure?'))" class="nav-link" href="/">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <form action="/submit_post" method="post" enctype="multipart/form-data">
+      <label for="recruiter_id">Recruiter ID:</label>
+      <select
+        class="form-control"
+        id="recruiter_id"
+        name="recruiter_id"
+        required
+      >
+        {% for recruiter in recruiters %}
+        <option value="{{ recruiter.id }}">{{ recruiter.name }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="post_location">Post Location:</label>
+      <select
+        class="form-control"
+        id="post_location"
+        name="post_location"
+        required
+      >
+        <option value="">Select</option>
+        <option value="Pool">Pool</option>
+        <option value="Cafeteria">Cafeteria</option>
+        <option value="Piazza">Piazza</option>
+        <option value="Block A">Block A</option>
+        <option value="Block B">Block B</option>
+        <option value="Block C">Block C</option>
+        <option value="Gate">Gate</option>
+        <option value="Compound">Compound</option>
+        <option value="Gym">Gym</option>
+        <option value="Circuit Room">Circuit Room</option>
+      </select>
+
+      <label for="duty_time">Duty Time:</label>
+      <select class="form-control" id="duty_time" name="duty_time" required>
+        <option value="">Select</option>
+        <option value="6:00am - 12:00pm">6:00am - 12:00pm</option>
+        <option value="12:00pm - 6:00pm">12:00pm - 6:00pm</option>
+        <option value="6:00pm - 12:00am">6:00pm - 12:00am</option>
+        <option value="12:00am - 6:00am">12:00am - 6:00am</option>
+      </select>
+
+      <label for="duty_date">Duty Date:</label>
+      <input type="date" id="duty_date" name="duty_date" required />
+      <label for="status">Status:</label>
+      <select class="form-control" id="status" name="status" required>
+        <option value="">Select</option>
+        <option value="Not Started">Not Started</option>
+        <option value="Active">Active</option>
+        <option value="Completed">Completed</option>
+        <option value="Cancelled">Cancelled</option>
+        <option value="Swap">Swap</option>
+        <option value="Postponed">Postponed</option>
+      </select>
+
+      <input id="submitButton" type="submit" value="Submit" />
+      <input type="hidden" name="post_id" id="" />
+      <input
+        formaction="edit_posts"
+        type="submit"
+        id="editButton"
+        value="Edit Post"
+        style="display: none"
+      />
+      <input
+        type="button"
+        id="clearButton"
+        value="Clear"
+        onclick="location.reload();"
+        class="btn btn-warning"
+      />
+    </form>
+
+    <div class="container mt-5">
+      <table class="table table-striped mt-5" id="postsTable">
+        <thead>
+          <tr>
+            <th scope="col">Post ID</th>
+            <th scope="col">Recruiter ID</th>
+            <th scope="col">Post Location</th>
+            <th scope="col">Duty Time</th>
+            <th scope="col">Duty Date</th>
+            <th scope="col">Status</th>
+            <th scope="col">Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for post in posts %}
+          <tr>
+            <td>{{ post.id }}</td>
+            <td>{{ post.recruiter_id }}</td>
+            <td>{{ post.post_location }}</td>
+            <td>{{ post.duty_time }}</td>
+            <td>{{ post.duty_date }}</td>
+            <td>{{ post.status }}</td>
+
+            <td>
+              <form
+                id="delete-post-{{ post.id }}"
+                action="{{ url_for('delete_post', post_id=post.id) }}"
+                method="post"
+              >
+                <button
+                  class="btn btn-danger delete-btn"
+                  type="button"
+                  data-id="{{ post.id }}"
+                >
+                  Delete
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="container mt-5">
+      <h1 class="text-center">Send Email</h1>
+      <form id="emailForm">
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            placeholder="Enter email"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="subject">Subject:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="subject"
+            placeholder="Enter subject"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="message">Message:</label>
+          <textarea
+            class="form-control"
+            id="message"
+            placeholder="Enter message"
+            required
+          ></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.datatables.net/v/bs5/dt-1.11.3/datatables.min.js"
+    ></script>
+    <script>
+      $(document).ready(function () {
+        $("#postsTable").DataTable();
+      });
+    </script>
+    <script>
+      $(document).ready(function () {
+        $("#postsTable").DataTable();
+
+        // Table row click event
+        $("#postsTable tbody").on("click", "tr", function () {
+          // Get table data
+          var table = $("#postsTable").DataTable();
+          var data = table.row(this).data();
+
+          // Assign data to form inputs
+          $("#recruiter_id").val(data[1]); // Assuming recruiter_id is the first column in your table
+          $("#post_location").val(data[2]); // Assuming post_location is the second column in your table
+          $("#duty_time").val(data[3]); // Assuming duty_time is the third column in your table
+          $("#duty_date").val(data[4]); // Assuming duty_date is the fourth column in your table
+          $("#status").val(data[5]); // Assuming status is the fifth column in your table
+
+          // Show edit button
+          $("#editButton").show();
+          $("#submitButton").hide();
+          var postId = data[0]; // Assuming post_id is the sixth column in your table
+          $("#editButton").attr("formaction", "/edit_posts/" + postId);
+        });
+
+        $("#editButton").on("click", function () {
+          $("#mainForm").attr("action", "/edit_post");
+          $("#submitButton").val("Update");
+          $(this).hide();
+          $("#newButton").show();
+        });
+
+        // Hide edit button when form is reset
+        $("form").on("reset", function () {
+          $("#editButton").hide();
+        });
+      });
+    </script>
+    <script>
+      // Delete button click event
+      $(".delete-btn").on("click", function (e) {
+        e.preventDefault();
+
+        var postId = $(this).data("id");
+
+        if (confirm("Are you sure you want to delete this post?")) {
+          $("#delete-post-" + postId).submit();
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Home</title>
+    <style>
+      body {
+        background: url("{{ url_for('static', filename='images/background2.jpg') }}")
+          no-repeat center center fixed;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+      }
+      #header {
+        background-color: #333333;
+        border: 5px solid #0066cc;
+        padding: 10px;
+        text-align: center;
+        color: white;
+      }
+      #overlay-home {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: #ffffff;
+        height: calc(100vh - 60px);
+        padding: 10px;
+      }
+      .admin-staff-container {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+      }
+      /* New rule */
+      .admin-staff-container div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="header">
+      <h1>WELCOME TO GUARD ATTENDANCE & PAYROLL SYSTEM</h1>
+    </div>
+
+    <div id="overlay-home">
+      <div>
+        <h2 id="date-home">Date: {{ date }}</h2>
+        <h2 id="time-home">Time: {{ time }}</h2>
+      </div>
+
+      <div class="admin-staff-container">
+        <a href="/admin_login">
+          <!-- Add this line -->
+          <div>
+            <img
+              src="{{ url_for('static', filename='images/admin.png') }}"
+              alt="Admin Icon"
+            />
+            <h3 style="color: white">Admin</h3>
+          </div>
+        </a>
+
+        <a href="/staff_login">
+          <div>
+            <img
+              src="{{ url_for('static', filename='images/staff.png') }}"
+              alt="Staff Icon"
+            />
+            <h3 style="color: white;">Staff</h3>
+          </div>
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Staff Login</title>
+    <style>
+      body {
+        background-image: url("background3.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: Tahoma, sans-serif;
+      }
+      #login-panel {
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 20px;
+        width: 300px;
+      }
+      #login-panel h2 {
+        text-align: center;
+        color: #ffccff;
+      }
+      .form-input {
+        margin: 10px 0;
+        display: flex;
+        flex-direction: column;
+        color: white;
+      }
+      .form-input input {
+        font-size: 18px;
+      }
+      #login-panel button {
+        font-size: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <form action="/staff_login" method="POST" id="login-panel">
+      <h2>STAFF LOGIN</h2>
+      <div class="form-input">
+        <label for="username">UserName:</label>
+        <input type="text" id="username" name="username" />
+        <!-- Add name attribute to input fields -->
+      </div>
+      <div class="form-input">
+        <label for="password">PassWord:</label>
+        <input type="password" id="password" name="password" />
+        <!-- Add name attribute to input fields -->
+      </div>
+      <button type="submit">Login</button>
+      <button type="button">Back</button>
+    </form>
+  </body>
+</html>

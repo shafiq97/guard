@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Attendance Form</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/v/bs4/dt-1.10.18/datatables.min.css"
+    />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="/mark_attendance">Guard Attendance</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/main_page"
+              >Add Recruit <span class="sr-only">(current)</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="assign_post">Assign Post</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Attendance</a>
+          </li>
+          <li class="nav-item">
+            <a onclick="return(confirm('Are you sure?'))" class="nav-link" href="/">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container">
+      <h1 class="text-center">Mark Attendance</h1>
+      <form id="attendanceForm" method="POST" action="/submit_attendance">
+        <input type="hidden" id="attendance_id" name="attendance_id" />
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <select
+            class="form-control"
+            id="recruiter_id"
+            name="recruiter_id"
+            required
+          >
+            {% for recruiter in recruiters %}
+            <option value="{{ recruiter.id }}">{{ recruiter.username }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="date">Date:</label>
+          <input
+            type="date"
+            class="form-control"
+            id="date"
+            name="duty_date"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="timeIn">Time In:</label>
+          <input
+            type="time"
+            class="form-control"
+            id="timeIn"
+            name="time_in"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="timeOut">Time Out:</label>
+          <input
+            type="time"
+            class="form-control"
+            id="timeOut"
+            name="time_out"
+            required
+          />
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            value="present"
+            id="attendanceCheck"
+            name="status"
+          />
+          <label class="form-check-label" for="attendanceCheck">
+            Present
+          </label>
+        </div>
+        <button id="submitButton" type="submit" class="btn btn-primary">
+          Submit
+        </button>
+        <button
+          id="editButton"
+          type="submit"
+          class="btn btn-primary"
+          style="display: none"
+          formaction="/edit_attendance"
+        >
+          Edit
+        </button>
+      </form>
+
+      <div class="container">
+        <h2 class="text-center mt-4">Attendance Details</h2>
+        <table class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th scope="col">User Id</th>
+              <th scope="col">Username</th>
+              <th scope="col">Date</th>
+              <th scope="col">Time In</th>
+              <th scope="col">Time Out</th>
+              <th scope="col">Status</th>
+              <th scope="col">Delete</th>
+              <th scope="col">Attendance Id</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for attendance in attendances %}
+            <tr data-recruiter-id="{{ attendance.recruiter_id }}">
+              <td>{{ attendance.user_id}}</td>
+              <td>{{ attendance.username }}</td>
+              <td>{{ attendance.date }}</td>
+              <td>{{ attendance.time_in }}</td>
+              <td>{{ attendance.time_out }}</td>
+              <td>{{ attendance.status }}</td>
+              <td>
+                <form method="POST" action="/delete_attendance">
+                  <!-- Add form for delete button -->
+                  <input
+                    type="hidden"
+                    name="attendance_id"
+                    value="{{ attendance.id }}"
+                  />
+                  <button
+                    onclick="return(confirm('Are you sure want to delete this?'))"
+                    type="submit"
+                    class="btn btn-danger btn-sm"
+                  >
+                    Delete
+                  </button>
+                </form>
+              </td>
+              <td>{{attendance.id}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.datatables.net/v/bs4/dt-1.10.18/datatables.min.js"
+    ></script>
+    <script>
+      $(document).ready(function () {
+        $(".table").DataTable();
+      });
+    </script>
+    <script>
+      $(document).ready(function () {
+        var table = $(".table").DataTable();
+
+        // Add click listener
+        $(".table tbody").on("click", "tr", function () {
+          $("#submitButton").hide();
+          $("#editButton").show();
+
+          var data = table.row(this).data();
+          $("#attendance_id").val(data[7]); // assuming date is in second column
+
+          $("#recruiter_id").append(
+            $("<option>", {
+              value: data[0],
+              text: data[1],
+              selected: true, // Set the option as selected
+            }).prop("selected", true)
+          );
+          $("#recruiter_id").prop("disabled", true); // Disable the dropdown
+
+          $("#date").val(data[2]); // assuming date is in second column
+          $("#timeIn").val(data[3]); // assuming time in is in third column
+          $("#timeOut").val(data[4]); // assuming time out is in fourth column
+          $("#attendanceCheck").prop("checked", data[5] === "present"); // assuming status is in fifth column
+        });
+      });
+    </script>
+  </body>
+</html>

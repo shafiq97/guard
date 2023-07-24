@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Data Insertion</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/1.11.2/css/jquery.dataTables.min.css"
+    />
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+
+      #image-preview {
+        max-width: 100%;
+        margin-top: 10px;
+      }
+
+      form {
+        max-width: 800px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 10px;
+      }
+
+      label {
+        display: block;
+        margin-top: 10px;
+      }
+
+      input[type="text"],
+      input[type="password"],
+      input[type="date"],
+      input[type="file"] {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-top: 5px;
+      }
+
+      input[type="submit"] {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 10px;
+        grid-column: 1 / span 2; /* Span two columns */
+      }
+
+      input[type="submit"]:hover {
+        background-color: #45a049;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      th,
+      td {
+        padding: 8px;
+        border: 1px solid #ccc;
+      }
+
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Guard Attendance</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="/main_page"
+              >Add Recruit <span class="sr-only">(current)</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/assign_post">Assign Post</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/mark_attendance">Attendance</a>
+          </li>
+          <li class="nav-item">
+            <a
+              onclick="return(confirm('Are you sure?'))"
+              class="nav-link"
+              href="/"
+              >Logout</a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <form action="/submit" method="post" enctype="multipart/form-data">
+      <label for="id">ID:</label>
+      <input type="text" id="id" name="id" />
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" />
+      <label for="phone">Phone:</label>
+      <input type="text" id="phone" name="phone" />
+      <label for="email">Email:</label>
+      <input type="text" id="email" name="email" />
+      <label for="address">Address:</label>
+      <input type="text" id="address" name="address" />
+      <label for="salary">Salary per month (RM):</label>
+      <input type="number" id="salary" name="salary" />
+      <label for="gender">Gender:</label>
+      <input type="text" id="gender" name="gender" />
+      <label for="origin">Origin:</label>
+      <select id="origin" name="origin">
+        <option value="Malaysia">Malaysia</option>
+        <option value="Afghanistan">Afghanistan</option>
+        <option value="Albania">Albania</option>
+        <option value="Algeria">Algeria</option>
+        <option value="Andorra">Andorra</option>
+        <option value="Angola">Angola</option>
+        <option value="Antigua and Barbuda">Antigua and Barbuda</option>
+        <option value="Argentina">Argentina</option>
+        <option value="Armenia">Armenia</option>
+        <option value="Australia">Australia</option>
+        <option value="Austria">Austria</option>
+        <option value="Azerbaijan">Azerbaijan</option>
+        <option value="Bahamas">Bahamas</option>
+        <option value="Bahrain">Bahrain</option>
+        <option value="Bangladesh">Bangladesh</option>
+        <option value="Barbados">Barbados</option>
+        <option value="Belarus">Belarus</option>
+        <option value="Belgium">Belgium</option>
+        <option value="Belize">Belize</option>
+        <option value="Benin">Benin</option>
+        <option value="Bhutan">Bhutan</option>
+        <option value="Bolivia">Bolivia</option>
+        <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
+        <option value="Botswana">Botswana</option>
+        <option value="Brazil">Brazil</option>
+        <option value="Brunei">Brunei</option>
+        <option value="Bulgaria">Bulgaria</option>
+        <option value="Burkina Faso">Burkina Faso</option>
+        <option value="Burundi">Burundi</option>
+        <option value="Cabo Verde">Cabo Verde</option>
+        <option value="Cambodia">Cambodia</option>
+        <option value="Cameroon">Cameroon</option>
+        <option value="Canada">Canada</option>
+        <option value="Central African Republic">
+          Central African Republic
+        </option>
+        <option value="Chad">Chad</option>
+        <option value="Chile">Chile</option>
+        <option value="China">China</option>
+        <option value="Colombia">Colombia</option>
+        <option value="Comoros">Comoros</option>
+        <option value="Congo (Congo-Brazzaville)">
+          Congo (Congo-Brazzaville)
+        </option>
+        <option value="Costa Rica">Costa Rica</option>
+        <option value="Côte d'Ivoire">Côte d'Ivoire</option>
+        <option value="Croatia">Croatia</option>
+        <option value="Cuba">Cuba</option>
+        <option value="Cyprus">Cyprus</option>
+        <option value="Czechia (Czech Republic)">
+          Czechia (Czech Republic)
+        </option>
+        <option value="Denmark">Denmark</option>
+        <option value="Djibouti">Djibouti</option>
+        <option value="Dominica">Dominica</option>
+        <option value="Dominican Republic">Dominican Republic</option>
+        <option value="Ecuador">Ecuador</option>
+        <option value="Egypt">Egypt</option>
+        <option value="El Salvador">El Salvador</option>
+        <option value="Equatorial Guinea">Equatorial Guinea</option>
+        <option value="Eritrea">Eritrea</option>
+        <option value="Estonia">Estonia</option>
+        <option value="Ethiopia">Ethiopia</option>
+        <option value="Fiji">Fiji</option>
+        <option value="Finland">Finland</option>
+        <option value="France">France</option>
+        <option value="Gabon">Gabon</option>
+        <option value="Gambia">Gambia</option>
+        <option value="Georgia">Georgia</option>
+        <option value="Germany">Germany</option>
+        <option value="Ghana">Ghana</option>
+        <option value="Greece">Greece</option>
+        <option value="Grenada">Grenada</option>
+        <option value="Guatemala">Guatemala</option>
+        <option value="Guinea">Guinea</option>
+        <option value="Guinea-Bissau">Guinea-Bissau</option>
+        <option value="Guyana">Guyana</option>
+        <option value="Haiti">Haiti</option>
+        <option value="Holy See">Holy See</option>
+        <option value="Honduras">Honduras</option>
+        <option value="Hungary">Hungary</option>
+        <option value="Iceland">Iceland</option>
+        <option value="India">India</option>
+        <option value="Indonesia">Ind</option>
+      </select>
+
+      <label for="relationship">Relationship Status:</label>
+      <select id="relationship" name="relationship">
+        <option value="Single">Single</option>
+        <option value="In a Relationship">In a Relationship</option>
+        <option value="Engaged">Engaged</option>
+        <option value="Married">Married</option>
+        <option value="It's Complicated">It's Complicated</option>
+        <option value="Separated">Separated</option>
+        <option value="Divorced">Divorced</option>
+        <option value="Widowed">Widowed</option>
+      </select>
+
+      <label for="religion">Religion:</label>
+      <select id="religion" name="religion">
+        <option value="Christianity">Christianity</option>
+        <option value="Islam">Islam</option>
+        <option value="Hinduism">Hinduism</option>
+        <option value="Buddhism">Buddhism</option>
+        <option value="Sikhism">Sikhism</option>
+        <option value="Judaism">Judaism</option>
+        <option value="Atheism">Atheism</option>
+        <option value="Other">Other</option>
+      </select>
+      <label for="dob">DOB:</label>
+      <input type="date" id="dob" name="dob" />
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" />
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" />
+      <label for="avatar">Avatar:</label>
+      <input
+        type="file"
+        id="avatar"
+        name="avatar"
+        onchange="showImagePreview(this);"
+      />
+      <img id="image-preview" src="#" alt="Image Preview" />
+      <input type="submit" id="submit-button" value="Submit" />
+      <button type="button" id="edit-button" style="display: none">Edit</button>
+      <button
+        type="button"
+        class="btn btn-warning"
+        style="grid-column: 1 / span 2"
+        onclick="refreshPage()"
+      >
+        Clear
+      </button>
+    </form>
+
+    <table id="users-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Email</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr data-id="{{ user.id }}">
+          <td>{{ user.id }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.phone }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <button
+              onclick="confirmDelete('{{ user.id }}')"
+              class="btn btn-block btn-danger"
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.2/js/jquery.dataTables.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("#users-table").DataTable();
+
+        // Event listener for table row click
+        $("#users-table tbody").on("click", "tr", function () {
+          var userId = $(this).data("id");
+
+          // Fetch user data using AJAX
+          $.ajax({
+            url: "/get_user",
+            method: "POST",
+            data: { user_id: userId },
+            success: function (data) {
+              var user = data;
+
+              // Populate the form fields with the fetched user data
+              $("#id").val(user.id);
+              $("#name").val(user.name);
+              $("#phone").val(user.phone);
+              $("#email").val(user.email);
+              $("#address").val(user.address);
+              $("#gender").val(user.gender);
+              // $("#origin").val(user.origin);
+              $("#origin").val(user.origin).prop("selected", true);
+              // $("#relationship").val(user.relationship);
+              $("#relationship").val(user.relationship).prop("selected", true);
+              // $("#religion").val(user.religion);
+              $("#religion").val(user.religion).prop("selected", true);
+
+              if (user.dob) {
+                var dob = new Date(user.dob);
+                var formattedDob = dob.toISOString().split("T")[0];
+                $("#dob").val(formattedDob);
+              } else {
+                $("#dob").val("");
+              }
+
+              $("#username").val(user.username);
+              $("#password").val(user.password);
+
+              $("#image-preview").attr(
+                "src",
+                "{{ url_for('static', filename='avatar/') }}" + user.avatar
+              );
+            },
+            error: function (error) {
+              console.log(error);
+            },
+          });
+        });
+      });
+
+      // Listen for click events on table rows
+      $("#users-table tbody tr").click(function () {
+        // Reset previously selected rows
+        $("#users-table tbody tr").removeClass("selected");
+        $("#edit-button").hide();
+
+        // Add 'selected' class to the clicked row
+        $(this).addClass("selected");
+
+        // Get the selected user ID
+        var userId = $(this).data("id");
+
+        // Check if a user ID is selected
+        if (userId) {
+          // Update the button text and behavior
+          $("#submit-button").val("Edit");
+          $("#submit-button").attr("formaction", "/edit/" + userId);
+        } else {
+          // No user ID selected, reset the button
+          $("#submit-button").val("Submit");
+          $("#submit-button").removeAttr("formaction");
+          $("#edit-button").hide();
+        }
+      });
+
+      function showImagePreview(input) {
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+
+          reader.onload = function (e) {
+            $("#image-preview").attr("src", e.target.result);
+          };
+
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+
+      function confirmDelete(userId) {
+        if (confirm("Are you sure you want to delete this user?")) {
+          $.ajax({
+            url: "/delete_user",
+            method: "POST",
+            data: { user_id: userId },
+            success: function (response) {
+              // Refresh the table or perform any other necessary actions
+              // For example, you can reload the page to fetch the updated user list
+              location.reload();
+            },
+            error: function (error) {
+              console.log(error);
+            },
+          });
+        }
+      }
+
+      function refreshPage() {
+        location.reload();
+      }
+    </script>
+  </body>
+</html>
