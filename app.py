@@ -4,10 +4,33 @@ import pymysql
 from datetime import datetime
 import os
 import json
+from flask_mail import Mail, Message
 
 
 app = Flask(__name__)
 app.secret_key = "1234"  # replace 'your secret key' with your actual secret key
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'muhammadshafiq457@gmail.com'
+app.config['MAIL_PASSWORD'] = 'hrplkkiqkaivawgk'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+
+mail = Mail(app)
+
+@app.route('/send_email', methods=['POST'])
+def send_email():
+    if request.method == 'POST':
+        email = request.form['email']
+        subject = request.form['subject']
+        message_content = request.form['message']
+        
+        msg = Message(subject, sender='attendance_admin@gmail.com', recipients=[email])
+        msg.body = message_content
+        mail.send(msg)
+        
+        return 'Email sent successfully'
+
 
 @app.route("/payroll")
 def payroll():

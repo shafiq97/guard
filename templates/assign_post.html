@@ -14,7 +14,7 @@
         margin: 20px;
         background: url("{{ url_for('static', filename='images/bg.jpeg') }}")
           no-repeat center center fixed;
-background-size: cover; 
+        background-size: cover;
       }
       form {
         max-width: 800px;
@@ -75,7 +75,12 @@ background-size: cover;
             <a class="nav-link" href="/mark_attendance">Attendance</a>
           </li>
           <li class="nav-item">
-            <a onclick="return(confirm('Are you sure?'))" class="nav-link" href="/">Logout</a>
+            <a
+              onclick="return(confirm('Are you sure?'))"
+              class="nav-link"
+              href="/"
+              >Logout</a
+            >
           </li>
         </ul>
       </div>
@@ -199,13 +204,14 @@ background-size: cover;
 
     <div class="container mt-5">
       <h1 class="text-center">Send Email</h1>
-      <form id="emailForm">
+      <form id="emailForm" action="/send_email" method="POST">
         <div class="form-group">
           <label for="email">Email:</label>
           <input
             type="email"
             class="form-control"
             id="email"
+            name="email"
             placeholder="Enter email"
             required
           />
@@ -216,6 +222,7 @@ background-size: cover;
             type="text"
             class="form-control"
             id="subject"
+            name="subject"
             placeholder="Enter subject"
             required
           />
@@ -226,6 +233,7 @@ background-size: cover;
             class="form-control"
             id="message"
             placeholder="Enter message"
+            name="message"
             required
           ></textarea>
         </div>
@@ -234,9 +242,10 @@ background-size: cover;
     </div>
 
     <script
-      src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
       crossorigin="anonymous"
     ></script>
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
       crossorigin="anonymous"
@@ -297,6 +306,19 @@ background-size: cover;
         if (confirm("Are you sure you want to delete this post?")) {
           $("#delete-post-" + postId).submit();
         }
+      });
+      $("#emailForm").submit(function (event) {
+        event.preventDefault();
+        var formData = $(this).serialize();
+
+        $.ajax({
+          type: "POST",
+          url: "/send_email",
+          data: formData,
+          success: function (response) {
+            alert(response);
+          },
+        });
       });
     </script>
   </body>
